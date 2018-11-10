@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace AmsterdamPHP\Repository\GoogleDrive;
 
 use AmsterdamPHP\Collection\MeetupCollection;
+use AmsterdamPHP\Model\Contact;
 use AmsterdamPHP\Model\Host;
 use AmsterdamPHP\Model\Meetup;
 use AmsterdamPHP\Model\Speaker;
 use AmsterdamPHP\Repository\GoogleDrive\Exception\AuthorizationExpiredException;
 use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
-use AmsterdamPHP\Repository\MeetupRepository;
+use AmsterdamPHP\Repository\ReadMeetupRepository;
+use AmsterdamPHP\Repository\WriteMeetupRepository;
 use DateTimeImmutable;
+use Google\Spreadsheet\Batch\BatchRequest;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\Exception\WorksheetNotFoundException;
 use Google\Spreadsheet\Exception\UnauthorizedException as GoogleUnauthorizedException;
@@ -20,7 +23,7 @@ use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class GoogleDriveMeetupRepository implements MeetupRepository
+class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRepository
 {
     /**
      * @var SessionInterface
@@ -72,6 +75,49 @@ class GoogleDriveMeetupRepository implements MeetupRepository
             ->first();
     }
 
+    public function getMeetupForDate(DateTimeImmutable $date) : ?Meetup
+    {
+        $thisYear          = (int)(new DateTimeImmutable())->format('Y');
+        $listOfNextMeetups = $this->listOfNextMeetupsInYear(new MeetupCollection(), null, $thisYear);
+
+        return $listOfNextMeetups
+            ->filter(function(Meetup $meetup) use ($date): bool {
+                return $date->format('Y-m-d') === $meetup->getDate()->format('Y-m-d');
+            })
+            ->first();
+    }
+
+    public function store(Meetup $meetup) : void
+    {
+        $spreadsheet = $this->getMonthlyMeetingsSpreadsheet();
+        $meetupYear  = $meetup->getDate()->format('Y');
+        $worksheet   = $spreadsheet->getWorksheetByTitle($meetupYear);
+
+        $cellFeed = $worksheet->getCellFeed();
+        $rowNumer = ((int) $meetup->getDate()->format('n')) + 1;
+
+        if (null !== $meetup->getHost()) {
+            $cellFeed->editCell($rowNumer, 3, $meetup->getHost()->getName());
+            $cellFeed->editCell($rowNumer, 4, $meetup->getHost()->getAddress());
+
+            if (null !== $meetup->getHost()->getContact()) {
+                $cellFeed->editCell(
+                    $rowNumer,
+                    5,
+                    sprintf(
+                        '%s <%s>',
+                        $meetup->getHost()->getContact()->getName(),
+                        $meetup->getHost()->getContact()->getEmail()
+                    )
+                );
+            }
+        }
+
+        if (null !== $meetup->getSpeaker()) {
+            $cellFeed->editCell($rowNumer, 7, $meetup->getSpeaker()->getName());
+        }
+    }
+
     /**
      * @throws AuthorizationExpiredException
      * @throws UnauthorizedException
@@ -102,12 +148,33 @@ class GoogleDriveMeetupRepository implements MeetupRepository
             }
 
             $hostCell    = $cellFeed->getCell($i, 3);
+            $contactCell = $cellFeed->getCell($i, 5);
             $speakerCell = $cellFeed->getCell($i, 7);
+
+            $host = null;
+            $contact = null;
+
+            if (null !== $contactCell) {
+                $contact = new Contact(
+                    $contactCell->getContent(),
+                    null
+                );
+            }
+
+            if (null !== $hostCell) {
+                $addressCell = $cellFeed->getCell($i, 4);
+
+                $host      = new Host(
+                    $hostCell->getContent(),
+                    $addressCell ? $addressCell->getContent() : null,
+                    $contact
+                );
+            }
 
             $listOfNextMeetups->addMeetup(
                 new Meetup(
                     new DateTimeImmutable($dateCell->getContent()),
-                    $hostCell ? new Host($hostCell->getContent()) : null,
+                    $host,
                     $speakerCell ? new Speaker($speakerCell->getContent()) : null
                 )
             );

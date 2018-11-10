@@ -6,7 +6,7 @@ namespace AmsterdamPHP\Controller;
 
 use AmsterdamPHP\Repository\GoogleDrive\Exception\AuthorizationExpiredException;
 use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
-use AmsterdamPHP\Repository\MeetupRepository;
+use AmsterdamPHP\Repository\ReadMeetupRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -15,7 +15,7 @@ use Twig\Environment;
 class ListOfNextMeetups
 {
     /**
-     * @var MeetupRepository
+     * @var ReadMeetupRepository
      */
     private $meetupRepository;
 
@@ -29,7 +29,7 @@ class ListOfNextMeetups
      */
     private $templating;
 
-    public function __construct(MeetupRepository $meetupRepository, RouterInterface $router, Environment $templating)
+    public function __construct(ReadMeetupRepository $meetupRepository, RouterInterface $router, Environment $templating)
     {
         $this->meetupRepository = $meetupRepository;
         $this->router           = $router;

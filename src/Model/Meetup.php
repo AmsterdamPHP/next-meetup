@@ -45,6 +45,11 @@ class Meetup
         return null !== $this->host;
     }
 
+    public function planInHost(Host $host) : self
+    {
+        return new self($this->date, $host, $this->speaker);
+    }
+
     public function getSpeaker() : ?Speaker
     {
         return $this->speaker;

@@ -49,7 +49,7 @@ class MeetupCollection implements IteratorAggregate
         return new \ArrayIterator($this->meetups);
     }
 
-    public function first() : Meetup
+    public function first() : ?Meetup
     {
         return reset($this->meetups);
     }
