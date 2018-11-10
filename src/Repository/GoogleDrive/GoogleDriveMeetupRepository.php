@@ -14,6 +14,7 @@ use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
 use AmsterdamPHP\Repository\ReadMeetupRepository;
 use AmsterdamPHP\Repository\WriteMeetupRepository;
 use DateTimeImmutable;
+use Google\Spreadsheet\CellFeed;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\Exception\WorksheetNotFoundException;
 use Google\Spreadsheet\Exception\UnauthorizedException as GoogleUnauthorizedException;
@@ -150,46 +151,10 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
                 continue;
             }
 
-            $hostCell           = $cellFeed->getCell($i, 3);
-            $contactCell        = $cellFeed->getCell($i, 5);
-            $speakerCell        = $cellFeed->getCell($i, 7);
-            $speakerContactCell = $cellFeed->getCell($i, 8);
+            $meetupDate = new DateTimeImmutable($dateCell->getContent());
+            $meetup     = $this->mapCellToMeetup($cellFeed, $i, $meetupDate);
 
-            $host = null;
-            $contact = null;
-            $speaker = null;
-
-            if (null !== $contactCell) {
-                $contact = new Contact(
-                    $contactCell->getContent(),
-                    null
-                );
-            }
-
-            if (null !== $hostCell) {
-                $addressCell = $cellFeed->getCell($i, 4);
-
-                $host = new Host(
-                    $hostCell->getContent(),
-                    $addressCell ? $addressCell->getContent() : null,
-                    $contact
-                );
-            }
-
-            if (null !== $speakerCell) {
-                $speaker = new Speaker(
-                    $speakerCell->getContent(),
-                    $speakerContactCell ? $speakerContactCell->getContent() : null
-                );
-            }
-
-            $listOfNextMeetups->addMeetup(
-                new Meetup(
-                    new DateTimeImmutable($dateCell->getContent()),
-                    $host,
-                    $speaker
-                )
-            );
+            $listOfNextMeetups->addMeetup($meetup);
         }
 
         // Filter meetups after today
@@ -230,5 +195,43 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
         } catch (GoogleUnauthorizedException $exception) {
             throw new AuthorizationExpiredException();
         }
+    }
+
+    private function mapCellToMeetup(CellFeed $cellFeed, int $i, DateTimeImmutable $meetupDate) : Meetup
+    {
+        $hostCell           = $cellFeed->getCell($i, 3);
+        $addressCell        = $cellFeed->getCell($i, 4);
+        $contactCell        = $cellFeed->getCell($i, 5);
+        $speakerCell        = $cellFeed->getCell($i, 7);
+        $speakerContactCell = $cellFeed->getCell($i, 8);
+
+        $host    = null;
+        $contact = null;
+        $speaker = null;
+
+        if (null !== $contactCell) {
+            $contact = Contact::fromContactString($contactCell->getContent());
+        }
+
+        if (null !== $hostCell) {
+            $host = new Host(
+                $hostCell->getContent(),
+                $addressCell ? $addressCell->getContent() : null,
+                $contact
+            );
+        }
+
+        if (null !== $speakerCell) {
+            $speaker = new Speaker(
+                $speakerCell->getContent(),
+                $speakerContactCell ? $speakerContactCell->getContent() : null
+            );
+        }
+
+        return new Meetup(
+            $meetupDate,
+            $host,
+            $speaker
+        );
     }
 }
