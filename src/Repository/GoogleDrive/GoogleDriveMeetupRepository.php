@@ -39,7 +39,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
      * @throws UnauthorizedException
      * @throws \Google\Spreadsheet\Exception\SpreadsheetNotFoundException
      */
-    public function listOfNextMeetups(int $limit = 5) : MeetupCollection
+    public function listOfNextMeetups(int $limit = 12) : MeetupCollection
     {
         $thisYear          = (int)(new DateTimeImmutable())->format('Y');
         $listOfNextMeetups = $this->listOfNextMeetupsInYear(new MeetupCollection(), $limit, $thisYear);

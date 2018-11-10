@@ -39,7 +39,7 @@ class ListOfNextMeetups
     public function __invoke() : Response
     {
         try {
-            $listOfNextMeetups = $this->meetupRepository->listOfNextMeetups(5);
+            $listOfNextMeetups = $this->meetupRepository->listOfNextMeetups(12);
         } catch (UnauthorizedException $exception) {
             return new RedirectResponse($this->router->generate('authenticationWithGoogleStart'));
         } catch (AuthorizationExpiredException $exception) {
