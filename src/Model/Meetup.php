@@ -60,6 +60,11 @@ class Meetup
         return null !== $this->speaker;
     }
 
+    public function planInSpeaker(Speaker $speaker) : self
+    {
+        return new self($this->date, $this->host, $speaker);
+    }
+
     public function isAfterDate(DateTimeImmutable $date) : bool
     {
         return $date < $this->date;

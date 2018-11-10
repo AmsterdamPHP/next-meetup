@@ -11,14 +11,25 @@ class Speaker
      */
     private $name;
 
-    public function __construct(string $name)
+    /**
+     * @var string|null
+     */
+    private $contactInformation;
+
+    public function __construct(string $name, ?string $contactInformation)
     {
-        $this->name = $name;
+        $this->name               = $name;
+        $this->contactInformation = $contactInformation;
     }
 
     public function getName() : string
     {
         return $this->name;
+    }
+
+    public function getContactInformation() : ?string
+    {
+        return $this->contactInformation;
     }
 
     public function __toString() : string

@@ -25,3 +25,7 @@ nextMeetupWithoutSpeaker:
 addHostToMeetup:
   path: /meetup/{date}/add-host
   controller: AmsterdamPHP\Controller\AddHostToMeetup::__invoke
+
+addSpeakerToMeetup:
+  path: /meetup/{date}/add-speaker
+  controller: AmsterdamPHP\Controller\AddSpeakerToMeetup::__invoke

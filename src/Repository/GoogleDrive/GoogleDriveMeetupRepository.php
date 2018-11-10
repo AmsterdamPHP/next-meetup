@@ -14,7 +14,6 @@ use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
 use AmsterdamPHP\Repository\ReadMeetupRepository;
 use AmsterdamPHP\Repository\WriteMeetupRepository;
 use DateTimeImmutable;
-use Google\Spreadsheet\Batch\BatchRequest;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\Exception\WorksheetNotFoundException;
 use Google\Spreadsheet\Exception\UnauthorizedException as GoogleUnauthorizedException;
@@ -115,6 +114,10 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
 
         if (null !== $meetup->getSpeaker()) {
             $cellFeed->editCell($rowNumer, 7, $meetup->getSpeaker()->getName());
+
+            if (null !== $meetup->getSpeaker()->getContactInformation()) {
+                $cellFeed->editCell($rowNumer, 8, $meetup->getSpeaker()->getContactInformation());
+            }
         }
     }
 
@@ -147,12 +150,14 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
                 continue;
             }
 
-            $hostCell    = $cellFeed->getCell($i, 3);
-            $contactCell = $cellFeed->getCell($i, 5);
-            $speakerCell = $cellFeed->getCell($i, 7);
+            $hostCell           = $cellFeed->getCell($i, 3);
+            $contactCell        = $cellFeed->getCell($i, 5);
+            $speakerCell        = $cellFeed->getCell($i, 7);
+            $speakerContactCell = $cellFeed->getCell($i, 8);
 
             $host = null;
             $contact = null;
+            $speaker = null;
 
             if (null !== $contactCell) {
                 $contact = new Contact(
@@ -164,10 +169,17 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
             if (null !== $hostCell) {
                 $addressCell = $cellFeed->getCell($i, 4);
 
-                $host      = new Host(
+                $host = new Host(
                     $hostCell->getContent(),
                     $addressCell ? $addressCell->getContent() : null,
                     $contact
+                );
+            }
+
+            if (null !== $speakerCell) {
+                $speaker = new Speaker(
+                    $speakerCell->getContent(),
+                    $speakerContactCell ? $speakerContactCell->getContent() : null
                 );
             }
 
@@ -175,7 +187,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
                 new Meetup(
                     new DateTimeImmutable($dateCell->getContent()),
                     $host,
-                    $speakerCell ? new Speaker($speakerCell->getContent()) : null
+                    $speaker
                 )
             );
         }
