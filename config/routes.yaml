@@ -1,0 +1,23 @@
+authenticationWithGoogleStart:
+    path: /start
+    controller: AmsterdamPHP\Controller\AuthenticateWithGoogle::start
+
+authenticationWithGoogleEnd:
+  path: /end
+  controller: AmsterdamPHP\Controller\AuthenticateWithGoogle::end
+
+authenticationWithGoogleRefresh:
+  path: /refresh
+  controller: AmsterdamPHP\Controller\AuthenticateWithGoogle::refresh
+
+listOfNextMeetups:
+  path: /
+  controller: AmsterdamPHP\Controller\ListOfNextMeetups::__invoke
+
+nextMeetupWithoutHost:
+  path: /next/without-host
+  controller: AmsterdamPHP\Controller\NextOpenMeetupForHosts::__invoke
+
+nextMeetupWithoutSpeaker:
+  path: /next/without-speaker
+  controller: AmsterdamPHP\Controller\NextOpenMeetupForSpeakers::__invoke

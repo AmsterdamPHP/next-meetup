@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of next meetups{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                Next meetup without speaker: {{ meetup.date | date('Y-m-d') }}
+            </h1>
+        </div>
+    </section>
+{% endblock %}

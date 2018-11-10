@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of next meetups{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title">
+                List of next meetups
+            </h1>
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Host</th>
+                        <th>Speaker</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for meetup in listOfNextMeetups %}
+                    <tr>
+                        <td>{{ meetup.date | date('Y-m-d') }}</td>
+                        <td>{{ meetup.host }}</td>
+                        <td>{{ meetup.speaker }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
