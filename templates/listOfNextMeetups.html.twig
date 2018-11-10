@@ -18,11 +18,15 @@
                 </thead>
                 <tbody>
                     {% for meetup in listOfNextMeetups %}
-                    <tr>
-                        <td>{{ meetup.date | date('Y-m-d') }}</td>
-                        <td>{{ meetup.host }}</td>
-                        <td>{{ meetup.speaker }}</td>
-                    </tr>
+                        <tr>
+                            <td>
+                                <a href="{{ path('meetupDetails', {date: meetup.date | date('Y-m-d')}) }}">
+                                {{ meetup.date | date('Y-m-d') }}
+                                </a>
+                            </td>
+                            <td>{{ meetup.host }}</td>
+                            <td>{{ meetup.speaker }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

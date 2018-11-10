@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Meetup of {{ meetup.date | date('Y-m-d') }}
+{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Meetup of {{ meetup.date | date('Y-m-d') }}
+        </h1>
+
+        {% if meetup.host %}
+            <div class="columns">
+                <div class="column is-full has-text-centered-mobile has-text-left-tablet">
+                    <h2 class="title is-5">Host</h2>
+                </div>
+            </div>
+
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Name</div>
+                <div class="column">{{ meetup.host.name }}</div>
+            </div>
+
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Address</div>
+                <div class="column">{{ meetup.host.address }}</div>
+            </div>
+
+            {% if meetup.host.contact %}
+                <div class="columns is-mobile">
+                    <div class="column is-one-fifth-tablet is-one-third-mobile">Contact name</div>
+                    <div class="column">{{ meetup.host.contact.name }}</div>
+                </div>
+
+                <div class="columns is-mobile">
+                    <div class="column is-one-fifth-tablet is-one-third-mobile">Contact email</div>
+                    <div class="column">{{ meetup.host.contact.email }}</div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if meetup.host and meetup.speaker %}
+            <hr>
+        {% endif %}
+
+        {% if meetup.speaker %}
+            <div class="columns">
+                <div class="column is-full has-text-centered-mobile has-text-left-tablet">
+                    <h2 class="title is-5">Speaker</h2>
+                </div>
+            </div>
+
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Name</div>
+                <div class="column">{{ meetup.speaker.name }}</div>
+            </div>
+
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Contact</div>
+                <div class="column">{{ meetup.speaker.contactInformation }}</div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
