@@ -80,7 +80,13 @@ class AuthenticateWithGoogle
         $this->googleClient->setAccessType('offline');
         $this->googleClient->setIncludeGrantedScopes(true);
 
-        $accessToken = $this->googleClient->fetchAccessTokenWithRefreshToken($refreshToken);
+        try {
+            $accessToken = $this->googleClient->fetchAccessTokenWithRefreshToken($refreshToken);
+        } catch (\LogicException $exception) {
+            return new RedirectResponse(
+                $this->router->generate('authenticationWithGoogleStart')
+            );
+        }
 
         $this->session->set('googleAccessToken', $accessToken['access_token']);
 

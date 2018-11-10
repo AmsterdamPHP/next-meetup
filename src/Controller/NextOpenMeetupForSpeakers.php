@@ -9,6 +9,7 @@ use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
 use AmsterdamPHP\Repository\MeetupRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
 class NextOpenMeetupForSpeakers
@@ -19,13 +20,19 @@ class NextOpenMeetupForSpeakers
     private $meetupRepository;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @var Environment
      */
     private $templating;
 
-    public function __construct(MeetupRepository $meetupRepository, Environment $templating)
+    public function __construct(MeetupRepository $meetupRepository, RouterInterface $router, Environment $templating)
     {
         $this->meetupRepository = $meetupRepository;
+        $this->router           = $router;
         $this->templating       = $templating;
     }
 

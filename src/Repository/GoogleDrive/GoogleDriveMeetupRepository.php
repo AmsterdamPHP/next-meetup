@@ -14,6 +14,7 @@ use AmsterdamPHP\Repository\MeetupRepository;
 use DateTimeImmutable;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\Exception\WorksheetNotFoundException;
+use Google\Spreadsheet\Exception\UnauthorizedException as GoogleUnauthorizedException;
 use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
@@ -147,7 +148,7 @@ class GoogleDriveMeetupRepository implements MeetupRepository
             $spreadsheetFeed    = $spreadsheetService->getSpreadsheetFeed();
 
             return $spreadsheetFeed->getByTitle('Monthly Meetings');
-        } catch (UnauthorizedException $exception) {
+        } catch (GoogleUnauthorizedException $exception) {
             throw new AuthorizationExpiredException();
         }
     }
