@@ -8,7 +8,7 @@ Meetup of {{ meetup.date | date('Y-m-d') }}
 <section class="section">
     <div class="container">
         <h1 class="title">
-            Meetup of {{ meetup.date | date('Y-m-d') }}
+            {{ meetup.date | date('Y-m-d') }}
         </h1>
 
         {% if meetup.host %}

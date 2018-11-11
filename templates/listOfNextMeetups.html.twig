@@ -8,24 +8,28 @@
             <h1 class="title">
                 List of next meetups
             </h1>
-            <table class="table is-striped is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Host</th>
-                        <th>Speaker</th>
-                    </tr>
-                </thead>
+            <table class="table is-striped is-fullwidth is-narrow">
                 <tbody>
                     {% for meetup in listOfNextMeetups %}
                         <tr>
-                            <td>
+                            <td style="width: 8em;">
                                 <a href="{{ path('meetupDetails', {date: meetup.date | date('Y-m-d')}) }}">
                                 {{ meetup.date | date('Y-m-d') }}
                                 </a>
                             </td>
-                            <td>{{ meetup.host }}</td>
-                            <td>{{ meetup.speaker }}</td>
+                            <td>
+                                {% if meetup.host %}
+                                    Host: {{ meetup.host }}
+                                {% endif %}
+
+                                {% if meetup.host and meetup.speaker %}
+                                    <br>
+                                {% endif %}
+
+                                {% if meetup.speaker %}
+                                    Speaker: {{ meetup.speaker }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
