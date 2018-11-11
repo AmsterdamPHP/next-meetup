@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AuthenticateWithGoogle
 {
@@ -38,6 +39,7 @@ class AuthenticateWithGoogle
     public function start() : Response
     {
         $this->googleClient->addScope(\Google_Service_Drive::DRIVE);
+        $this->googleClient->addScope('email');
         $this->googleClient->setAccessType('offline');
         $this->googleClient->setIncludeGrantedScopes(true);
         $this->googleClient->setRedirectUri(
@@ -60,6 +62,9 @@ class AuthenticateWithGoogle
         $this->googleClient->setIncludeGrantedScopes(true);
 
         $accessToken = $this->googleClient->fetchAccessTokenWithAuthCode($authenticationCode);
+
+        $email = $this->extractEmailFromAccessToken($accessToken);
+        $this->ensureEmailDomainIsAllowed($email);
 
         $this->session->set('googleAccessToken', $accessToken['access_token']);
 
@@ -99,5 +104,21 @@ class AuthenticateWithGoogle
         }
 
         return new Response(print_r($accessToken, true));
+    }
+
+    private function extractEmailFromAccessToken($accessToken) : string
+    {
+        $verifiedId = $this->googleClient->verifyIdToken($accessToken['id_token']);
+
+        return $verifiedId['email'];
+    }
+
+    private function ensureEmailDomainIsAllowed(string $email) : void
+    {
+        if (substr_compare($email, 'amsterdamphp.nl', -strlen('amsterdamphp.nl')) === 0) {
+            return;
+        }
+
+        throw new AccessDeniedException('Access is only allowed for AmsterdamPHP people');
     }
 }
