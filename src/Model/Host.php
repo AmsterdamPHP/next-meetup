@@ -17,15 +17,21 @@ class Host
     private $address;
 
     /**
+     * @var int|null
+     */
+    private $spaceLimit;
+
+    /**
      * @var Contact
      */
     private $contact;
 
-    public function __construct(string $name, ?string $address, ?Contact $contact)
+    public function __construct(string $name, ?string $address, ?int $spaceLimit, ?Contact $contact)
     {
-        $this->name    = $name;
-        $this->address = $address;
-        $this->contact = $contact;
+        $this->name       = $name;
+        $this->address    = $address;
+        $this->spaceLimit = $spaceLimit;
+        $this->contact    = $contact;
     }
 
     public function getName() : string
@@ -36,6 +42,11 @@ class Host
     public function getAddress() : ?string
     {
         return $this->address;
+    }
+
+    public function getSpaceLimit() : ?int
+    {
+        return $this->spaceLimit;
     }
 
     public function getContact() : ?Contact

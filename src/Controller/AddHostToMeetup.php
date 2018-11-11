@@ -53,6 +53,7 @@ class AddHostToMeetup
             $host = new Host(
                 $request->get('host-name'),
                 $request->get('host-address'),
+                null,
                 new Contact(
                     $request->get('contact-name'),
                     $request->get('contact-email')

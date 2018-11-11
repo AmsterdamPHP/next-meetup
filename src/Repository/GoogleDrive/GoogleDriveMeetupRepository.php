@@ -202,12 +202,24 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
         $hostCell           = $cellFeed->getCell($i, 3);
         $addressCell        = $cellFeed->getCell($i, 4);
         $contactCell        = $cellFeed->getCell($i, 5);
+        $spaceLimitCell     = $cellFeed->getCell($i, 6);
         $speakerCell        = $cellFeed->getCell($i, 7);
         $speakerContactCell = $cellFeed->getCell($i, 8);
 
-        $host    = null;
-        $contact = null;
-        $speaker = null;
+        $host           = null;
+        $address        = null;
+        $spaceLimit     = null;
+        $contact        = null;
+        $speaker        = null;
+        $speakerContact = null;
+
+        if (null !== $spaceLimitCell) {
+            $spaceLimit = (int) $spaceLimitCell->getContent();
+        }
+
+        if (null !== $addressCell) {
+            $address = $addressCell->getContent();
+        }
 
         if (null !== $contactCell) {
             $contact = Contact::fromContactString($contactCell->getContent());
@@ -216,15 +228,20 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
         if (null !== $hostCell) {
             $host = new Host(
                 $hostCell->getContent(),
-                $addressCell ? $addressCell->getContent() : null,
+                $address,
+                $spaceLimit,
                 $contact
             );
+        }
+
+        if (null !== $speakerContactCell) {
+            $speakerContact = $speakerContactCell->getContent();
         }
 
         if (null !== $speakerCell) {
             $speaker = new Speaker(
                 $speakerCell->getContent(),
-                $speakerContactCell ? $speakerContactCell->getContent() : null
+                $speakerContact
             );
         }
 

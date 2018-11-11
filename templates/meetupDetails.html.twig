@@ -28,6 +28,11 @@ Meetup of {{ meetup.date | date('Y-m-d') }}
                 <div class="column">{{ meetup.host.address }}</div>
             </div>
 
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Space limit</div>
+                <div class="column">{{ meetup.host.spaceLimit }}</div>
+            </div>
+
             {% if meetup.host.contact %}
                 <div class="columns is-mobile">
                     <div class="column is-one-fifth-tablet is-one-third-mobile">Contact name</div>
