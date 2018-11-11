@@ -53,7 +53,9 @@ class AddSpeakerToMeetup
 
             $speaker = new Speaker(
                 $request->get('speaker-name'),
-                $request->get('speaker-contact')
+                $request->get('speaker-contact'),
+                null,
+                null
             );
 
             $this->writeMeetupRepository->store($meetup->planInSpeaker($speaker));

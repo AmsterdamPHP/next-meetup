@@ -9,6 +9,7 @@ use AmsterdamPHP\Model\Contact;
 use AmsterdamPHP\Model\Host;
 use AmsterdamPHP\Model\Meetup;
 use AmsterdamPHP\Model\Speaker;
+use AmsterdamPHP\Model\Talk;
 use AmsterdamPHP\Repository\GoogleDrive\Exception\AuthorizationExpiredException;
 use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
 use AmsterdamPHP\Repository\ReadMeetupRepository;
@@ -199,19 +200,25 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
 
     private function mapCellToMeetup(CellFeed $cellFeed, int $i, DateTimeImmutable $meetupDate) : Meetup
     {
-        $hostCell           = $cellFeed->getCell($i, 3);
-        $addressCell        = $cellFeed->getCell($i, 4);
-        $contactCell        = $cellFeed->getCell($i, 5);
-        $spaceLimitCell     = $cellFeed->getCell($i, 6);
-        $speakerCell        = $cellFeed->getCell($i, 7);
-        $speakerContactCell = $cellFeed->getCell($i, 8);
+        $hostCell             = $cellFeed->getCell($i, 3);
+        $addressCell          = $cellFeed->getCell($i, 4);
+        $contactCell          = $cellFeed->getCell($i, 5);
+        $spaceLimitCell       = $cellFeed->getCell($i, 6);
+        $speakerCell          = $cellFeed->getCell($i, 7);
+        $speakerContactCell   = $cellFeed->getCell($i, 8);
+        $speakerBiographyCell = $cellFeed->getCell($i, 12);
+        $talkTitleCell        = $cellFeed->getCell($i, 9);
+        $talkAbstractCell     = $cellFeed->getCell($i, 11);
 
-        $host           = null;
-        $address        = null;
-        $spaceLimit     = null;
-        $contact        = null;
-        $speaker        = null;
-        $speakerContact = null;
+        $host             = null;
+        $address          = null;
+        $spaceLimit       = null;
+        $contact          = null;
+        $speaker          = null;
+        $speakerContact   = null;
+        $speakerBiography = null;
+        $talk             = null;
+        $talkAbstract     = null;
 
         if (null !== $spaceLimitCell) {
             $spaceLimit = (int) $spaceLimitCell->getContent();
@@ -238,10 +245,27 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
             $speakerContact = $speakerContactCell->getContent();
         }
 
+        if (null !== $speakerBiographyCell) {
+            $speakerBiography = $speakerBiographyCell->getContent();
+        }
+
+        if (null !== $talkAbstractCell) {
+            $talkAbstract = $talkAbstractCell->getContent();
+        }
+
+        if (null !== $talkTitleCell) {
+            $talk = new Talk(
+                $talkTitleCell->getContent(),
+                $talkAbstract
+            );
+        }
+
         if (null !== $speakerCell) {
             $speaker = new Speaker(
                 $speakerCell->getContent(),
-                $speakerContact
+                $speakerContact,
+                $speakerBiography,
+                $talk
             );
         }
 

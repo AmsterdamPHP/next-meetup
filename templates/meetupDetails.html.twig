@@ -66,6 +66,23 @@ Meetup of {{ meetup.date | date('Y-m-d') }}
                 <div class="column is-one-fifth-tablet is-one-third-mobile">Contact</div>
                 <div class="column">{{ meetup.speaker.contactInformation }}</div>
             </div>
+
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-tablet is-one-third-mobile">Biography</div>
+                <div class="column">{{ meetup.speaker.biography }}</div>
+            </div>
+
+            {% if meetup.speaker.talk %}
+                <div class="columns is-mobile">
+                    <div class="column is-one-fifth-tablet is-one-third-mobile">Talk title</div>
+                    <div class="column">{{ meetup.speaker.talk.title }}</div>
+                </div>
+
+                <div class="columns is-mobile">
+                    <div class="column is-one-fifth-tablet is-one-third-mobile">Talk abstract</div>
+                    <div class="column">{{ meetup.speaker.talk.abstract }}</div>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </section>
