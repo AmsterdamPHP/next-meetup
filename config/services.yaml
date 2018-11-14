@@ -34,3 +34,8 @@ services:
 
     AmsterdamPHP\Repository\WriteMeetupRepository:
         alias: AmsterdamPHP\Repository\GoogleDrive\GoogleDriveMeetupRepository
+
+    DMS\Service\Meetup\MeetupKeyAuthClient:
+        factory: ['AmsterdamPHP\Service\MeetupClientFactory', factory]
+        arguments:
+            - '%env(MEETUP_API_KEY)%'

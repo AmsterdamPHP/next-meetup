@@ -84,6 +84,8 @@ Meetup of {{ meetup.date | date('Y-m-d') }}
                 </div>
             {% endif %}
         {% endif %}
+
+        <a class="button" href="{{ path('sendDetailsToMeetupDotCom', {date: meetup.date | date('Y-m-d')}) }}">Send to meetup.com</a>
     </div>
 </section>
 {% endblock %}

@@ -33,3 +33,7 @@ addHostToMeetup:
 addSpeakerToMeetup:
   path: /meetup/{date}/add-speaker
   controller: AmsterdamPHP\Controller\AddSpeakerToMeetup::__invoke
+
+sendDetailsToMeetupDotCom:
+  path: /meetup/{date}/send
+  controller: AmsterdamPHP\Controller\SendDetailsToMeetupDotCom::__invoke

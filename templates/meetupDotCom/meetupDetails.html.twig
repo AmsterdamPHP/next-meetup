@@ -1,0 +1,54 @@
+{% if not meetup.host and not meetup.speaker %}
+    <p>TBA.</p>
+
+    <p>
+        Would your company like to host?
+        Would you like to speak?
+    </p>
+
+    <p>
+        Reach out at contact@amsterdamphp.nl
+    </p>
+{% else %}
+    <p>
+        Schedule:
+        19:00 - Doors open
+        19:30 - Talk
+        20:30 - Raffles, and announcements
+        20:45 - Social, drinks and food
+    </p>
+{% endif %}
+
+{% if not meetup.host and meetup.speaker %}
+    <p>
+        Would your company like to host?
+        Reach out at contact@amsterdamphp.nl
+    </p>
+{% endif %}
+
+{% if meetup.host and not meetup.speaker %}
+    <p>
+        Would you like to speak?
+        Reach out at contact@amsterdamphp.nl
+    </p>
+{% endif %}
+
+{% if meetup.speaker and meetup.speaker.talk %}
+<p>
+    Talk: {{ meetup.speaker.talk.title }}
+    {{ meetup.speaker.talk.abstract }}
+</p>
+
+<p>
+    Speaker: {{ meetup.speaker.name }}
+    {{ meetup.speaker.biography }}
+</p>
+{% elseif meetup.speaker and not meetup.speaker.talk %}
+<p>
+    Talk: TBA
+</p>
+
+<p>
+    Speaker: {{ meetup.speaker.name }}
+</p>
+{% endif %}

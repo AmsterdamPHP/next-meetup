@@ -6,6 +6,7 @@
         "php": "^7.2",
         "ext-iconv": "*",
         "asimlqt/php-google-spreadsheet-client": "^3.0",
+        "dms/meetup-api-client": "^2.3",
         "google/apiclient": "^2.2",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/asset": "^4.1",

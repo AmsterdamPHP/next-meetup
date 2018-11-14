@@ -2,6 +2,9 @@
     "asimlqt/php-google-spreadsheet-client": {
         "version": "v3.0.2"
     },
+    "dms/meetup-api-client": {
+        "version": "v2.3.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -70,6 +73,9 @@
     },
     "google/auth": {
         "version": "v1.3.2"
+    },
+    "guzzle/guzzle": {
+        "version": "v3.8.1"
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
