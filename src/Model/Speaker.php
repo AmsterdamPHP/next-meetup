@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace AmsterdamPHP\Model;
 
+use Ramsey\Uuid\Uuid;
+
 class Speaker
 {
+    /**
+     * @var Uuid
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -26,12 +33,18 @@ class Speaker
      */
     private $talk;
 
-    public function __construct(string $name, ?string $contactInformation, ?string $biography, ?Talk $talk)
+    public function __construct(Uuid $id, string $name, ?string $contactInformation, ?string $biography, ?Talk $talk)
     {
+        $this->id                 = $id;
         $this->name               = $name;
         $this->contactInformation = $contactInformation;
         $this->biography          = $biography;
         $this->talk               = $talk;
+    }
+
+    public function getId() : Uuid
+    {
+        return $this->id;
     }
 
     public function getName() : string

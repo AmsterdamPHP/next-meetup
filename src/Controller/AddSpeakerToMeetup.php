@@ -12,6 +12,7 @@ use AmsterdamPHP\Repository\GoogleDrive\Exception\UnauthorizedException;
 use AmsterdamPHP\Repository\ReadMeetupRepository;
 use AmsterdamPHP\Repository\WriteMeetupRepository;
 use DateTimeImmutable;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,7 @@ class AddSpeakerToMeetup
             $meetup = $this->readMeetupRepository->getMeetupForDate($meetupDate);
 
             $speaker = new Speaker(
+                Uuid::uuid4(),
                 $request->get('speaker-name'),
                 $request->get('speaker-contact'),
                 null,

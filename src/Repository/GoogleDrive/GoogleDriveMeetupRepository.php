@@ -22,6 +22,7 @@ use Google\Spreadsheet\Exception\UnauthorizedException as GoogleUnauthorizedExce
 use Google\Spreadsheet\ServiceRequestFactory;
 use Google\Spreadsheet\Spreadsheet;
 use Google\Spreadsheet\SpreadsheetService;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRepository
@@ -192,7 +193,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
             $spreadsheetService = new SpreadsheetService();
             $spreadsheetFeed    = $spreadsheetService->getSpreadsheetFeed();
 
-            return $spreadsheetFeed->getByTitle('Monthly Meetings');
+            return $spreadsheetFeed->getByTitle('Monthly Meetings-dev');
         } catch (GoogleUnauthorizedException $exception) {
             throw new AuthorizationExpiredException();
         }
@@ -234,6 +235,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
 
         if (null !== $hostCell) {
             $host = new Host(
+                Uuid::uuid4(),
                 $hostCell->getContent(),
                 $address,
                 $spaceLimit,
@@ -255,6 +257,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
 
         if (null !== $talkTitleCell) {
             $talk = new Talk(
+                Uuid::uuid4(),
                 $talkTitleCell->getContent(),
                 $talkAbstract
             );
@@ -262,6 +265,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
 
         if (null !== $speakerCell) {
             $speaker = new Speaker(
+                Uuid::uuid4(),
                 $speakerCell->getContent(),
                 $speakerContact,
                 $speakerBiography,
@@ -270,6 +274,7 @@ class GoogleDriveMeetupRepository implements ReadMeetupRepository, WriteMeetupRe
         }
 
         return new Meetup(
+            Uuid::uuid4(),
             $meetupDate,
             $host,
             $speaker

@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace AmsterdamPHP\Model;
 
 use DateTimeImmutable;
+use Ramsey\Uuid\Uuid;
 
 class Meetup
 {
+    /**
+     * @var Uuid
+     */
+    private $id;
+
     /**
      * @var DateTimeImmutable
      */
@@ -23,11 +29,17 @@ class Meetup
      */
     private $speaker;
 
-    public function __construct(DateTimeImmutable $date, ?Host $host, ?Speaker $speaker)
+    public function __construct(Uuid $id, DateTimeImmutable $date, ?Host $host, ?Speaker $speaker)
     {
+        $this->id = $id;
         $this->date = $date;
         $this->host = $host;
         $this->speaker = $speaker;
+    }
+
+    public function getId() : Uuid
+    {
+        return $this->id;
     }
 
     public function getDate() : DateTimeImmutable
@@ -47,7 +59,7 @@ class Meetup
 
     public function planInHost(Host $host) : self
     {
-        return new self($this->date, $host, $this->speaker);
+        return new self($this->id, $this->date, $host, $this->speaker);
     }
 
     public function getSpeaker() : ?Speaker
@@ -62,7 +74,7 @@ class Meetup
 
     public function planInSpeaker(Speaker $speaker) : self
     {
-        return new self($this->date, $this->host, $speaker);
+        return new self($this->id, $this->date, $this->host, $speaker);
     }
 
     public function isAfterDate(DateTimeImmutable $date) : bool
